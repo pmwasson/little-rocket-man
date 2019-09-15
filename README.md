@@ -1,2 +1,2 @@
 # little-rocket-man
- Jetpack maze
+ Jetpack maze game for the Arduboy.
