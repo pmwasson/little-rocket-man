@@ -62,8 +62,8 @@ const unsigned char PROGMEM lrm_plus_mask[] =
 #define MAXMOVX   5
 #define MAXMOVY   5
 #define MAXPOSY   1000
-#define MINPOSX   -1000
-#define MAXPOSX   1000
+#define MINPOSX   -75
+#define MAXPOSX   75
 
 uint16_t background;
 int8_t   movx;
@@ -169,7 +169,7 @@ void loop() {
     if (posy <= 0) {
       frame = (arduboy.frameCount>>2&1);
       if (!sound.playing()) {
-        sound.tone(NOTE_C7,60, NOTE_B7,80);
+        sound.tone(NOTE_C3,80, NOTE_B3,100);
       }
     }
   }
@@ -178,7 +178,7 @@ void loop() {
     if (posy <= 0) {
       frame = (arduboy.frameCount>>2&1);
       if (!sound.playing()) {
-        sound.tone(NOTE_C7,60, NOTE_B7,80);
+        sound.tone(NOTE_C3,100, NOTE_B3,80);
       }
     }
   }
