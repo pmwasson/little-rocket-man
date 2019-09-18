@@ -64,8 +64,7 @@ int8_t   movy;
 int16_t  posx;
 int16_t  posy;
 
-// This function runs once in your game.
-// use it for anything that needs to be set only once in your game.
+// Setup
 void setup() {
   // initiate arduboy instance
   arduboy.begin();
@@ -82,8 +81,7 @@ void setup() {
 }
 
 
-// our main game loop, this runs once every cycle/frame.
-// this is where our game logic goes.
+// Game loop
 void loop() {
   // pause render until it's time for the next frame
   if (!(arduboy.nextFrame()))
@@ -200,4 +198,37 @@ void loop() {
   
   background += -movx + (movy << 7);
   arduboy.display();
+}
+
+// Draw ground should be called in the order:
+//   Upper-left, upper-right, lower-left, lower-right
+// although some may be skipped.
+// The upper will clear overlap and the lower will combine
+
+// Draw Ground from Upper-left corner
+// No boundary checks, so call with caution
+// delx must be <= 0
+// dely must be <= 0
+void drawGroundUL(int8_t delx, int8_t dely, uint8_t pattern) {
+  int8_t lines = (64+dely)/8;
+  int8_t overflow = (64+dely)%8;
+  
+  // Bulk of the lines
+  for(int8_t y=0; y < lines; y++) {
+    for(int8_t x=0; x < 128+delx; x++) {
+      uint8_t bits;
+      switch(pattern) {
+        case GROUND_VOID:
+          bits = 0x00;
+          break;
+        case GROUND_SOLID:
+          bits = 0xff;
+          break;
+        arduboy.buffer[y*8+x] = bits;
+      }
+    }
+    // last line
+    if (overflow > 0) {
+      for(int8_t y=0; y < lines; y++) {
+  }
 }
