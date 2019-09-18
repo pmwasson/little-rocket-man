@@ -199,10 +199,8 @@ void loop() {
     movy = max(movy-1,-MAXMOVY);
     frame=1;
   }
-  if (arduboy.pressed(A_BUTTON)) {
-    movx = 0;
-    movy = 0;
-    frame = 0;
+  else if (arduboy.pressed(UP_BUTTON)) {
+    frame=1;
   }
 
   sprites.drawPlusMask((128/2)-(16/2),(64/2)-(24/2),lrm_plus_mask,frame);
