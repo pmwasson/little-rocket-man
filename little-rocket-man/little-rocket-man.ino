@@ -1,14 +1,7 @@
 /*
-Hello, World! example
-June 11, 2015
-Copyright (C) 2015 David Martinez
-All rights reserved.
-This code is the most basic barebones code for writing a program for Arduboy.
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+Little Rocket Man
+Sept. 2019
+Paul Wasson
 */
 
 #include <Arduboy2.h>
@@ -57,8 +50,8 @@ const unsigned char PROGMEM lrm_plus_mask[] =
 };
 
 
-#define PRIME1 613
-#define PRIME2 3001
+#define STARFIELD1 613
+#define STARFIELD2 3001
 #define MAXMOVX   5
 #define MAXMOVY   5
 #define MAXPOSY   1000
@@ -106,13 +99,13 @@ void loop() {
   arduboy.print(posy);
 
   // Star field 1
-  for(uint16_t i=0; i < 128*64; i+=PRIME1) {
+  for(uint16_t i=0; i < 128*64; i+=STARFIELD1) {
     uint16_t j = i + background;
     arduboy.drawPixel (j & 0x7f, (j >> 7) & 0x3f, WHITE);
   }
 
   // Star field 2
-  for(uint16_t i=0; i < 256*128; i+=PRIME2) {
+  for(uint16_t i=0; i < 256*128; i+=STARFIELD2) {
     uint16_t j = i + background;
     arduboy.drawPixel ((j>>1) & 0x7f, (j >> 8) & 0x3f, WHITE);
   }
