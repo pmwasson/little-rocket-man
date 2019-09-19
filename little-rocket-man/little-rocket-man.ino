@@ -49,6 +49,8 @@ const unsigned char PROGMEM lrm_plus_mask[] =
 0x3f, 0x7f, 0x11, 0x3f, 0x4f, 0x7f, 0x62, 0x7f, 0xe0, 0xe7, 0xc0, 0xc0, 0x00, 0x00, 0x00, 0x00,
 };
 
+#define SWIDTH     128
+#define SHEIGHT    64
 
 #define STARFIELD1 613
 #define STARFIELD2 3001
@@ -57,6 +59,9 @@ const unsigned char PROGMEM lrm_plus_mask[] =
 #define MAXPOSY   1000
 #define MINPOSX   -75
 #define MAXPOSX   75
+
+#define GROUND_VOID  0
+#define GROUND_SOLID 1
 
 uint16_t background;
 int8_t   movx;
@@ -96,17 +101,20 @@ void loop() {
   arduboy.setCursor(56, posy < MAXPOSY/2 ? 0 : 8*7);
   arduboy.print(posy);
 
-  // Star field 1
-  for(uint16_t i=0; i < 128*64; i+=STARFIELD1) {
-    uint16_t j = i + background;
-    arduboy.drawPixel (j & 0x7f, (j >> 7) & 0x3f, WHITE);
-  }
-
-  // Star field 2
-  for(uint16_t i=0; i < 256*128; i+=STARFIELD2) {
-    uint16_t j = i + background;
-    arduboy.drawPixel ((j>>1) & 0x7f, (j >> 8) & 0x3f, WHITE);
-  }
+  drawStars(background,STARFIELD1,0);
+  drawStars(background,STARFIELD2,1);
+  
+//  // Star field 1
+//  for(uint16_t i=0; i < SWIDTH*SHEIGHT; i+=STARFIELD1) {
+//    uint16_t j = i + background;
+//    arduboy.drawPixel (j & 0x7f, (j >> 7) & 0x3f, WHITE);
+//  }
+//
+//  // Star field 2
+//  for(uint16_t i=0; i < SWIDTH*SHEIGHT; i+=STARFIELD2) {
+//    uint16_t j = i + background;
+//    arduboy.drawPixel ((j>>1) & 0x7f, (j >> 8) & 0x3f, WHITE);
+//  }
 
   posy += movy;
   posx += movx;
@@ -194,24 +202,33 @@ void loop() {
     frame=1;
   }
 
+  drawWallUL(-90,-54,GROUND_SOLID);
+
   sprites.drawPlusMask((128/2)-(16/2),(64/2)-(24/2),lrm_plus_mask,frame);
   
   background += -movx + (movy << 7);
   arduboy.display();
 }
 
-// Draw ground should be called in the order:
+void drawStars(uint16_t background, uint16_t seed, uint8_t layer) {
+  for(uint16_t i=0; i < SWIDTH*SHEIGHT; i+=seed) {
+    uint16_t j = i + background;
+    arduboy.drawPixel ((j>>layer) & 0x7f, (j >> (7+layer)) & 0x3f, WHITE);
+  }
+}
+
+// Draw walls should be called in the order:
 //   Upper-left, upper-right, lower-left, lower-right
 // although some may be skipped.
 // The upper will clear overlap and the lower will combine
 
-// Draw Ground from Upper-left corner
+// Draw wall from Upper-left corner
 // No boundary checks, so call with caution
-// delx must be <= 0
-// dely must be <= 0
-void drawGroundUL(int8_t delx, int8_t dely, uint8_t pattern) {
+// delx must be -128 < delx <= 0
+// dely must be -64 < dely <= 0
+void drawWallUL(int8_t delx, int8_t dely, uint8_t pattern) {
   int8_t lines = (64+dely)/8;
-  int8_t overflow = (64+dely)%8;
+  int8_t offset = (64+dely)%8;
   
   // Bulk of the lines
   for(int8_t y=0; y < lines; y++) {
@@ -224,11 +241,24 @@ void drawGroundUL(int8_t delx, int8_t dely, uint8_t pattern) {
         case GROUND_SOLID:
           bits = 0xff;
           break;
-        arduboy.buffer[y*8+x] = bits;
       }
+      arduboy.sBuffer[y*128+x] = bits;
     }
-    // last line
-    if (overflow > 0) {
-      for(int8_t y=0; y < lines; y++) {
+  }
+  
+  // last line
+  if (offset > 0) {
+    for(int8_t x=0; x < 128+delx; x++) {
+      uint8_t bits;
+      switch(pattern) {
+        case GROUND_VOID:
+          bits = 0x00;
+          break;
+        case GROUND_SOLID:
+          bits = 0xff>>(8-offset);
+          break;
+      }
+      arduboy.sBuffer[lines*128+x] = bits;
+    }
   }
 }
