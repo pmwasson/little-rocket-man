@@ -12,42 +12,9 @@ Arduboy2 arduboy;
 Sprites  sprites;
 ArduboyTones sound(arduboy.audio.enabled);
 
-const unsigned char PROGMEM lrm_plus_mask[] =
-{
-// width, height,
-16, 24,
-// FRAME 00
-0x00, 0x00, 0x00, 0x80, 0xc0, 0xc0, 0xc0, 0xc0, 0xf8, 0xf8, 0xc6, 0xfe, 0xf2, 0xfe, 0xf2, 0xfe, 
-0xf2, 0xfe, 0xf2, 0xfe, 0xc6, 0xfe, 0xf8, 0xf8, 0xc0, 0xc0, 0xc0, 0xc0, 0x00, 0x80, 0x00, 0x00, 
-0xbf, 0xff, 0x7c, 0xff, 0x01, 0x03, 0x02, 0x03, 0xdd, 0xff, 0x9b, 0xff, 0xdb, 0xff, 0x9b, 0xff, 
-0x9b, 0xff, 0xdb, 0xff, 0x9b, 0xff, 0xdd, 0xff, 0x02, 0x03, 0x01, 0x03, 0x7c, 0xff, 0xbf, 0xff, 
-0x01, 0x01, 0x01, 0x01, 0x80, 0x80, 0xc0, 0xc0, 0xdf, 0xff, 0xef, 0xff, 0x01, 0x01, 0x00, 0x00, 
-0x00, 0x00, 0x01, 0x01, 0xef, 0xff, 0xdf, 0xff, 0xc0, 0xc0, 0x80, 0x80, 0x01, 0x01, 0x01, 0x01, 
+#include "map.h"
+#include "sprite.h"
 
-// FRAME 01
-0x80, 0x80, 0x00, 0xc0, 0xe0, 0xe0, 0x60, 0xe0, 0xfc, 0xfc, 0xe3, 0xff, 0xf9, 0xff, 0xf9, 0xff, 
-0xf9, 0xff, 0xf9, 0xff, 0xe3, 0xff, 0xfc, 0xfc, 0x60, 0xe0, 0xe0, 0xe0, 0x00, 0xc0, 0x80, 0x80, 
-0xdf, 0xff, 0xbe, 0xff, 0x00, 0x01, 0x01, 0x01, 0xee, 0xff, 0xcd, 0xff, 0xed, 0xff, 0x4d, 0x7f, 
-0x4d, 0x7f, 0xed, 0xff, 0xcd, 0xff, 0xee, 0xff, 0x01, 0x01, 0x00, 0x01, 0xbe, 0xff, 0xdf, 0xff, 
-0x00, 0x00, 0x00, 0x00, 0xc0, 0xc0, 0xe0, 0xe0, 0x6f, 0x7f, 0x77, 0x7f, 0x00, 0x00, 0x00, 0x00, 
-0x00, 0x00, 0x00, 0x00, 0x77, 0x7f, 0x6f, 0x7f, 0xe0, 0xe0, 0xc0, 0xc0, 0x00, 0x00, 0x00, 0x00, 
-
-// FRAME 02
-0x00, 0x80, 0xc0, 0xc0, 0xe0, 0xe0, 0xe0, 0xe0, 0xdc, 0xfc, 0x5f, 0xff, 0xbf, 0xff, 0xbf, 0xff, 
-0xbf, 0xff, 0xbf, 0xff, 0x5f, 0xff, 0xdc, 0xfc, 0xe0, 0xe0, 0xe0, 0xe0, 0xc0, 0xc0, 0x00, 0x80, 
-0xff, 0xff, 0xbe, 0xff, 0x01, 0x01, 0x01, 0x01, 0x7f, 0xff, 0x00, 0xff, 0xdf, 0xff, 0xaf, 0xff, 
-0xef, 0xff, 0xdf, 0xff, 0x00, 0xff, 0x7f, 0xff, 0x01, 0x01, 0x01, 0x01, 0xbe, 0xff, 0xff, 0xff, 
-0x00, 0x00, 0x00, 0x00, 0xc0, 0xc0, 0x80, 0xff, 0x3e, 0x7f, 0x2f, 0x7f, 0x1b, 0x3f, 0x1f, 0x3f, 
-0x0e, 0x1f, 0x1b, 0x3f, 0x1f, 0x7f, 0x2c, 0x7f, 0xb8, 0xfe, 0xc0, 0xfc, 0x00, 0x00, 0x00, 0x00, 
-
-// FRAME 03
-0x00, 0x80, 0xc0, 0xc0, 0xe0, 0xe0, 0xe0, 0xe0, 0xdc, 0xfc, 0x5f, 0xff, 0xbf, 0xff, 0xbf, 0xff, 
-0xbf, 0xff, 0xbf, 0xff, 0x5f, 0xff, 0xdc, 0xfc, 0xe0, 0xe0, 0xe0, 0xe0, 0xc0, 0xc0, 0x00, 0x80, 
-0xff, 0xff, 0xbe, 0xff, 0x01, 0x01, 0x01, 0x81, 0x3f, 0xff, 0xc0, 0xff, 0xdf, 0xff, 0xef, 0xff, 
-0xef, 0xff, 0xdf, 0xff, 0x80, 0xff, 0x3f, 0xff, 0x01, 0x01, 0x01, 0x01, 0xbe, 0xff, 0xff, 0xff, 
-0x00, 0x00, 0x00, 0x00, 0xc0, 0xc0, 0xe0, 0xe3, 0x63, 0x7f, 0x6f, 0x7f, 0x1c, 0x3f, 0x07, 0x7f, 
-0x3f, 0x7f, 0x11, 0x3f, 0x4f, 0x7f, 0x62, 0x7f, 0xe0, 0xe7, 0xc0, 0xc0, 0x00, 0x00, 0x00, 0x00,
-};
 
 #define SWIDTH     128
 #define SHEIGHT    64
@@ -56,33 +23,32 @@ const unsigned char PROGMEM lrm_plus_mask[] =
 #define STARFIELD2 3001
 #define MAXMOVX   5
 #define MAXMOVY   5
-#define MAXPOSY   1000
-#define MINPOSX   -75
-#define MAXPOSX   75
 
-#define GROUND_VOID  0
-#define GROUND_SOLID 1
+#define COLLISION_NONE 0
+#define COLLISION_FLOOR 1
+#define COLLISION_CEILING 2
+#define COLLISION_RIGHT 4
+#define COLLISION_LEFT 8
+
 
 uint16_t background;
 int8_t   movx;
 int8_t   movy;
 int16_t  posx;
 int16_t  posy;
+uint8_t  collision;
 
 // Setup
 void setup() {
   // initiate arduboy instance
   arduboy.begin();
-
-  // here we set the framerate to 15, we do not need to run at
-  // default 60 and it saves us battery life
   arduboy.setFrameRate(60);
 
   background = 0;
   movx = 0;
   movy = 0;
-  posx = 0;
-  posy = 0;
+  posx = MAPSTARTX*128;
+  posy = MAPSTARTY*128;
 }
 
 
@@ -93,95 +59,101 @@ void loop() {
     return;
 
   // first we clear our screen to black
-  arduboy.clear();
+  //arduboy.clear();
 
+
+
+  // 128x128 block , 16x16 map
+  // if delx > 0, need 2 blocks in x
+  // if dely > 64, need 2 blocks in y
+  uint8_t mapx = (posx>>7) & 0xf;
+  uint8_t mapy = (posy>>7) & 0xf;
+  uint16_t map_ptr = mapx + mapy*16;
+  uint8_t delx = posx & 0x7f;
+  uint8_t dely = posy & 0x7f;
+  
+  collision = COLLISION_NONE;
+  
+  uint8_t tile = pgm_read_byte(lrm_map+map_ptr);
+  drawBottomWall(0,128-delx,128-dely,tile);
+  checkFloor(tile,dely,delx<72);
+  checkLeft(tile,delx,dely<108);
+  
+  if (delx > 0) {
+    tile = pgm_read_byte(lrm_map+map_ptr+1);
+    drawBottomWall(128-delx,128,128-dely,tile);
+    checkFloor(tile,dely,delx>56);
+    checkRight(tile,delx,dely<108);
+  }
+  
+  if (dely > 64) {
+    tile = pgm_read_byte(lrm_map+map_ptr+16);
+    drawTopWall(0,128-delx,dely-64,tile);
+    checkCeiling(tile,dely,delx<72);
+    checkLeft(tile,delx,dely>84);
+    
+    if (delx > 0) {
+      tile = pgm_read_byte(lrm_map+map_ptr+17);
+      drawTopWall(128-delx,128,dely-64,tile);
+      checkCeiling(tile,dely,delx>56);
+      checkRight(tile,delx,dely>84);
+    }
+  }
+
+  if (collision & COLLISION_FLOOR) {
+    posy = (posy & 0xff80) + 96 + 12;
+    movy = 0;
+  }
+  if (collision & COLLISION_CEILING) {
+    posy = (posy & 0xff80) + 96 - 12;
+    movy = 0;
+  }
+  if (collision & COLLISION_RIGHT) {
+    posx = (posx & 0xff80) + 64 - 8;
+    movx = 0;
+  }
+  if (collision & COLLISION_LEFT) {
+    posx = (posx & 0xff80) + 64 + 8;
+    movx = 0;
+  }
+  
   // Debug
-  arduboy.setCursor(posx > 0 ? 0 : 8*12, 28);
+  arduboy.setCursor(0, 28);
   arduboy.print(posx);
-  arduboy.setCursor(56, posy < MAXPOSY/2 ? 0 : 8*7);
+  arduboy.setCursor(56, 0);
   arduboy.print(posy);
+  arduboy.setCursor(8*14, 28);
+  arduboy.print(collision);
 
   drawStars(background,STARFIELD1,0);
   drawStars(background,STARFIELD2,1);
-  
-//  // Star field 1
-//  for(uint16_t i=0; i < SWIDTH*SHEIGHT; i+=STARFIELD1) {
-//    uint16_t j = i + background;
-//    arduboy.drawPixel (j & 0x7f, (j >> 7) & 0x3f, WHITE);
-//  }
-//
-//  // Star field 2
-//  for(uint16_t i=0; i < SWIDTH*SHEIGHT; i+=STARFIELD2) {
-//    uint16_t j = i + background;
-//    arduboy.drawPixel ((j>>1) & 0x7f, (j >> 8) & 0x3f, WHITE);
-//  }
 
-  posy += movy;
-  posx += movx;
-  
-  if (posy < 0) {
-    posy = 0;
-    movy = 0;
-    movx = 0;
-  } else if (posy > MAXPOSY) {
-    posy = MAXPOSY;
-    movy = 0;    
-  }
-
-  if (posx < MINPOSX) {
-    posx = MINPOSX;
-    movx = 0;
-  } else if (posx > MAXPOSX) {
-    posx = MAXPOSX;
-    movx = 0;    
-  }
-
-
-  if (posy < 20) {
-    for(uint8_t y=44+posy; y < 64; y++) {
-      arduboy.drawFastHLine(0,y,127);
-    }
-  }
-  else if (posy > MAXPOSY-20) {
-    for(uint8_t y=0; y < posy-(MAXPOSY-20); y++) {
-      arduboy.drawFastHLine(0,y,127);
-    }
-  }
-
-  if (posx < MINPOSX+56) {
-    for(uint8_t x=0; x < MINPOSX-posx+55; x++) {
-      arduboy.drawFastVLine(x,0,63);
-    }
-  }
-  else if (posx > MAXPOSX-56) {
-    for(uint8_t x=72+MAXPOSX-posx; x < 127; x++) {
-      arduboy.drawFastVLine(x,0,63);
-    }
-  }
-
-  
   // Inputs
   uint8_t frame = 0;
   
   if (arduboy.pressed(RIGHT_BUTTON)) {
-    if (posx < MAXPOSX) movx = min(movx+1,MAXMOVX);
-    if (posy <= 0) {
-      frame = (arduboy.frameCount>>2&1);
-      if (!sound.playing()) {
-        sound.tone(NOTE_C3,80, NOTE_B3,100);
+    if (!(collision & COLLISION_RIGHT)) {
+      movx = min(movx+1,MAXMOVX);
+      if (collision & COLLISION_FLOOR) {
+        frame = (arduboy.frameCount>>2&1);
+        if (!sound.playing()) {
+          sound.tone(NOTE_C3,80, NOTE_B3,100);
+        }
       }
     }
   }
   else if (arduboy.pressed(LEFT_BUTTON)) {
-    if (posx > MINPOSX) movx = max(movx-1,-MAXMOVX);
-    if (posy <= 0) {
-      frame = (arduboy.frameCount>>2&1);
-      if (!sound.playing()) {
-        sound.tone(NOTE_C3,100, NOTE_B3,80);
+    if (!(collision & COLLISION_LEFT)) {
+      movx = max(movx-1,-MAXMOVX);
+      if (collision & COLLISION_FLOOR) {
+        frame = (arduboy.frameCount>>2&1);
+        if (!sound.playing()) {
+          sound.tone(NOTE_C3,100, NOTE_B3,80);
+        }
       }
     }
   }
-  else if (posy <= 0) {
+  else if (collision & COLLISION_FLOOR) {
     movx=0;
   }
 
@@ -190,11 +162,11 @@ void loop() {
       sound.tone(NOTE_C2H,60, NOTE_A2H,30);
     }
     frame = 2+(arduboy.frameCount>>2&1);
-    if (posy < 1000) {
+    if (!(collision & COLLISION_CEILING)) {
       movy = min(movy+1,MAXMOVY);
     }
   }
-  else if (posy > 0) {
+  else if (!(collision & COLLISION_FLOOR)) {
     movy = max(movy-1,-MAXMOVY);
     frame=1;
   }
@@ -202,12 +174,46 @@ void loop() {
     frame=1;
   }
 
-  drawWallUL(-90,-54,GROUND_SOLID);
-
   sprites.drawPlusMask((128/2)-(16/2),(64/2)-(24/2),lrm_plus_mask,frame);
   
+  posy += movy;
+  posx += movx;
   background += -movx + (movy << 7);
+
+  if (arduboy.pressed(A_BUTTON)) {
+    background = 0;
+    movx = 0;
+    movy = 0;
+    posx = MAPSTARTX*128;
+    posy = MAPSTARTY*128;    
+  }
+
+  
   arduboy.display();
+}
+
+void checkFloor(uint8_t tile, uint8_t dely, bool x_good) {
+  if ((tile != 0) && (dely <= 108) && (dely > 108-7) && x_good) {
+    collision |= COLLISION_FLOOR;
+  }
+}
+
+void checkCeiling(uint8_t tile, uint8_t dely, bool x_good) {
+  if ((tile !=0) && (dely >= 84) && (dely < 84+7) && x_good) {
+    collision |= COLLISION_CEILING;
+  }
+}
+
+void checkLeft(uint8_t tile, uint8_t delx, bool y_good) {
+    if ((tile != 0) && (delx <= 72) && (delx > 72-7) && y_good) {
+      collision |= COLLISION_LEFT;
+    }
+}
+
+void checkRight(uint8_t tile, uint8_t delx, bool y_good) {
+    if ((tile != 0) && (delx >= 56) && (delx < 56+7) && y_good) {
+      collision |= COLLISION_RIGHT;
+    }
 }
 
 void drawStars(uint16_t background, uint16_t seed, uint8_t layer) {
@@ -217,48 +223,47 @@ void drawStars(uint16_t background, uint16_t seed, uint8_t layer) {
   }
 }
 
-// Draw walls should be called in the order:
-//   Upper-left, upper-right, lower-left, lower-right
-// although some may be skipped.
-// The upper will clear overlap and the lower will combine
-
-// Draw wall from Upper-left corner
-// No boundary checks, so call with caution
-// delx must be -128 < delx <= 0
-// dely must be -64 < dely <= 0
-void drawWallUL(int8_t delx, int8_t dely, uint8_t pattern) {
-  int8_t lines = (64+dely)/8;
-  int8_t offset = (64+dely)%8;
-  
-  // Bulk of the lines
-  for(int8_t y=0; y < lines; y++) {
-    for(int8_t x=0; x < 128+delx; x++) {
-      uint8_t bits;
-      switch(pattern) {
-        case GROUND_VOID:
-          bits = 0x00;
-          break;
-        case GROUND_SOLID:
-          bits = 0xff;
-          break;
-      }
-      arduboy.sBuffer[y*128+x] = bits;
+// Assume we call bottom first, so top need to OR on the overlap
+// y is the number of lines to draw from the top
+void drawTopWall(uint8_t x0, uint8_t x1, uint8_t y, uint8_t tile) {
+  uint16_t line = 0;
+  uint8_t bits = tile ? 0xff : 0;
+  while (y > 0) {
+    if (y < 8) {
+      bits = bits>>(8-y);
+      y=0;
     }
+    else {
+      y -= 8;
+    }
+    for (uint8_t x=x0; x < x1; x++) {
+      if (y > 0) {
+        arduboy.sBuffer[line+x] = bits;
+      }
+      else {
+        arduboy.sBuffer[line+x] |= bits;        
+      }
+    }
+    line += 128;
   }
-  
-  // last line
-  if (offset > 0) {
-    for(int8_t x=0; x < 128+delx; x++) {
-      uint8_t bits;
-      switch(pattern) {
-        case GROUND_VOID:
-          bits = 0x00;
-          break;
-        case GROUND_SOLID:
-          bits = 0xff>>(8-offset);
-          break;
-      }
-      arduboy.sBuffer[lines*128+x] = bits;
+}
+
+// Note, y is flipped from normal (number of lines to draw from the bottom)
+void drawBottomWall(uint8_t x0, uint8_t x1, uint8_t y, uint8_t tile) {
+  uint16_t line = 128*7;  // Bottom row
+  uint8_t bits = tile ? 0xff : 0;
+  y = min(64,y); // check y bounds
+  while (y > 0) {
+    if (y < 8) {
+      bits = bits<<(8-y);
+      y=0;
     }
+    else {
+      y -= 8;
+    }
+    for (uint8_t x=x0; x < x1; x++) {
+      arduboy.sBuffer[line+x] = bits;
+    }
+    line -= 128;
   }
 }
