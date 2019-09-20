@@ -58,10 +58,9 @@ void loop() {
   if (!(arduboy.nextFrame()))
     return;
 
-  // first we clear our screen to black
-  //arduboy.clear();
 
-
+  // Drawing walls/spaces will write every byte of the
+  // screen buffer, so no need to clear
 
   // 128x128 block , 16x16 map
   // if delx > 0, need 2 blocks in x
