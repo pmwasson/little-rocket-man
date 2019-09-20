@@ -34,7 +34,7 @@
 #define MAP_LL    4
 #define MAP_LR    5
 
-const uint8_t PROGMEM lrm_map[16*16] =
+const uint8_t PROGMEM lrm_map[] =
 {
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, // 0
   1,0,0,0,1,1,1,0,0,0,0,0,1,0,0,1, // 1
