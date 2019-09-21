@@ -136,7 +136,7 @@ void loop() {
       if (collision & COLLISION_FLOOR) {
         frame = (arduboy.frameCount>>2&1);
         if (!sound.playing()) {
-          sound.tone(NOTE_C3,80, NOTE_B3,100);
+          sound.tone(NOTE_C3,100, NOTE_REST,80);
         }
       }
     }
@@ -147,7 +147,7 @@ void loop() {
       if (collision & COLLISION_FLOOR) {
         frame = (arduboy.frameCount>>2&1);
         if (!sound.playing()) {
-          sound.tone(NOTE_C3,100, NOTE_B3,80);
+          sound.tone(NOTE_C3,100, NOTE_REST,80);
         }
       }
     }
@@ -158,7 +158,7 @@ void loop() {
 
   if (arduboy.pressed(B_BUTTON)) {
     if (!sound.playing()) {
-      sound.tone(NOTE_C2H,60, NOTE_A2H,30);
+      sound.tone(NOTE_C2H,60, NOTE_A2H,30); 
     }
     frame = 2+(arduboy.frameCount>>2&1);
     if (!(collision & COLLISION_CEILING)) {
