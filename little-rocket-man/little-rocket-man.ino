@@ -59,6 +59,7 @@ void loop() {
     return;
 
 
+
   // Drawing walls/spaces will write every byte of the
   // screen buffer, so no need to clear
 
